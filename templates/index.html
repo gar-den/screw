@@ -13,10 +13,6 @@
         * {
         }
 
-        #screw {
-            width: 30px;
-        }
-
         .container-fluid {
             height: 1000px;
         }
@@ -52,11 +48,16 @@
             width: 500px;
             height: 600px;
             position: absolute;
+            padding: 50px;
+            border: black solid;
+            border-radius: 5px;
+
             top: 50%;
             left: 50%;
             margin: -250px 0 0 -250px;
             background: #eee;
             z-index: 2;
+
         }
 
         .black_bg {
@@ -71,21 +72,6 @@
             z-index: 1;
         }
 
-        .modal_close {
-            width: 26px;
-            height: 26px;
-            position: absolute;
-            top: -30px;
-            right: 0;
-        }
-
-        .modal_close > a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: url(https://img.icons8.com/metro/26/000000/close-window.png);
-            text-indent: -9999px;
-        }
 
         .buttondiv {
             text-align: center;
@@ -115,28 +101,131 @@
             showTodo();
         });
 
-        function showTodo() {
+        function showTodo() { // db에서 리스트 가져오기
             $.ajax({
-                type: 'GET',
-                url: '/api/list?sample_give=샘플데이터',
-                data: {},
-                success: function (response) {
-                    // db에서 리스트 가져오기
-                    // todo면 .todo에, done이면 .done에 추가하기
-                    // todo인데 일주일 내에 완료해야 하는 일이면 class 이름에 urgent 추가!
+                    type: 'GET',
+                    url: '/list',
+                    data: {},
+                    success: function (response) {
+                        let saved_content = response['all_saved_content']
+                        for (let i = 0; i < saved_content.length; i++) {
+                            let title = saved_content[i]['content']
+                            let date = saved_content[i]['finish']
+                            let new_date; // 계산용
+                            let done = saved_content[i]['done'];
+
+                            if (Number(date.split('/')[1]) <= 6) {  // 1~6일이라면 -1, +31일 해서 앞쪽 달으로 보내줌 (계산이 쉽게)
+                                let year = date.split('/')[2];
+                                let month = Number(date.split('/')[0]) - 1;
+                                let day = String(Number(date.split('/')[1]) + 31);
+
+                                if (month < 10) {
+                                    month = '0' + String(month);
+                                }
+
+                                new_date = year + month + day; // 2021-06-10에서 20210610 으로 변경
+                            } else {
+                                new_date = date.split('/')[2] + date.split('/')[0] + date.split('/')[1]; // 2021-06-10에서 20210610 으로 변경
+                            }
+
+                            let today = new Date();
+                            let dd = String(today.getDate()).padStart(2, '0');
+                            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy = today.getFullYear();
+                            let today_done = yyyy + '/' + mm + '/' + dd;
+                            if (Number(dd) <= 6) {  // 1~6일이라면 +31일 해서 앞쪽 달으로 보내줌 (계산이 쉽게)
+                                dd = String(Number(dd) + 31);
+                                mm = String(Number(mm) - 1);
+                                if (Number(mm) < 10) {
+                                    mm = '0' + mm;
+                                }
+                            }
+
+                            today = yyyy + mm + dd; // today: 20210601
+
+                            // todo면 .todo에, done이면 .done에 추가하기
+                            let temp_html;
+                            if (done == true) {  // to done
+                                temp_html = `<li>${today_done} ${title}</li>`;
+                                $('.done').append(temp_html)
+                            } else {  // to todo
+                                if (Number(new_date) < Number(today) + 7) { // 일주일도 안남았다면 add urgent to class name
+                                    if (dd > 31) {
+                                        dd = dd - 31;
+                                        mm = mm + 1;
+                                    }
+                                    temp_html = `<li><button class="todobutton urgent" onclick="todoClicked(this.textContent)"><span class="date">${date}</span> - <span class="work">${title}</span>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                         class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd"
+                                                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                    </svg>
+
+                                            </button></li>`
+                                } else {  // 일주일 이상 남았다면 do not add urgent to class name
+                                    if (dd > 31) dd = dd - 31;
+                                    temp_html = `<li><button class="todobutton" onclick="todoClicked(this.textContent)"><span class="date">${date}</span> - <span class="work">${title}</span>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                         class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd"
+                                                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                    </svg>
+
+                                            </button></li>`
+                                }
+
+                                $('.todo').append(temp_html)
+                            }
+                        }
+                    }
+
+                    // .done 에 추가하기
                 }
-            });
+            )
         }
 
-        function likeStar(name) {
+        function modifySchedule(before, after) {  // to modify_schedule() in app.py
             $.ajax({
                 type: 'POST',
-                url: '/api/like',
-                data: {sample_give: '샘플데이터'},
+                url: '/modify',
+                data: {schedule_receive: before, changed_receive: after},
                 success: function (response) {
                     alert(response['msg']);
                 }
             });
+        }
+
+        function deleteSchedule(work) {// to delete_schedule() in app.py
+            $.ajax({
+                type: 'POST',
+                url: '/delete',
+                data: {schedule_give: work},
+                success: function (response) {
+                    alert(response['msg']);
+                }
+            });
+        }
+
+        function register() {
+            let title = $('#post-title').val()
+            let comment = $('#post-comment').val()
+            let url = $('#post-url').val()
+            let remind = $('#post-remind').val()
+            /*시작날짜 끝날짜
+            let start = $('#post-start').val()
+            let finish = $('#post-finish').val()
+            */
+            $.ajax({
+                type: "POST",
+                url: "/save",
+                data: {title_give: title, comment_give: comment, url_give: url, remind_give: remind},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
         }
 
         function todoClicked(text) {
@@ -148,29 +237,31 @@
 
             if (choice == true) {
                 // date 값이랑 work 값 이용해서 db에서 수정/삭제 하기
-                alert("date: " + date + ", work: " + work + " 완료!")
+                //alert("date: " + date + ", work: " + work + " 완료!")
                 todoDone(work);  // Done 코너로 옮기
 
                 // 요소 삭제 후 리스트 새로고침 필요
             } else {
-
+                // 취소 버튼 눌렀을 때
+                // 모달 창 떠야 함 - 안 된다!
             }
         }
 
         function todoDone(work) {
-            let today = new Date();
-            let dd = String(today.getDate()).padStart(2, '0');
-            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-            let yyyy = today.getFullYear();
+            $.ajax({
+                type: 'POST',
+                url: '/list',
+                data: {work_give: work},
+                success: function (response) {
+                    alert(response['msg']);  // 완료되었습니다. 라고 출력되기.
 
-            today = yyyy + '.' + mm + '.' + dd + ' ' + work
-
-            let temp_html = `<li>${today}</li>`;
-
-            $('.done').append(temp_html);
+                    window.location.reload();
+                }
+            });
         }
 
         window.onload = function () {
+
             function onClick() {
                 document.querySelector('.modal_wrap').style.display = 'block';
                 document.querySelector('.black_bg').style.display = 'block';
@@ -181,8 +272,10 @@
                 document.querySelector('.black_bg').style.display = 'none';
             }
 
-            document.querySelector('.modal_btn').addEventListener('click', onClick);
+
+            document.getElementById('modal_btn').addEventListener('click', onClick);
             document.querySelector('.modal_close').addEventListener('click', offClick);
+
 
         };
     </script>
@@ -191,25 +284,53 @@
 
 <div class="container-fluid">
     <div class="main">
-        <h1 style="color:#F26849; text-align: center;">SCREW <img id="screw" src="../static/screw.png" alt=""></h1>
+        <h1 style="color:#F26849; text-align: center;">SCREW</h1>
         <p>This page is for ...</p>
 
         <div class="buttondiv">
-            <button type="button" class="btn btn-outline-primary submit modal_btn">등록하기</button>
+            <button type="button" class="btn btn-outline-primary submit" id="modal_btn">등록하기</button>
         </div>
 
     </div>
 
     <div class="black_bg"></div>
-    <div class="modal_wrap">
-        <div class="modal_close"><a href="#">close</a></div>
-        <div id="enroll-box" class="form-post" style="dispaly:none">
+    <div class="modal_wrap" class="form-post" style="dispaly:none">
+        <!--<div class="modal_close"><a href="#">close</a></div>-->
+        <!--<div id="post-box" >-->
+        <div>
             <h3>등록해보자</h3>
 
-            <textarea name="content" cols="40" rows="8">
+            <div class="form-group">
+                <label for="post-title">제목</label>
+                <input id="post-title" class="form-control" placeholder="">
+                <div class="date-start">시작날짜
 
-            </textarea>
+                </div>
+                <div class="date-finsh">종료날짜
+                </div>
+                <label for="post-comment">세부 내용</label>
+                <textarea id="post-comment" class="form-control" rows="2" placeholder=""></textarea>
+                <label for="post-url">URL 추가</label>
+                <input id="post-url" class="form-control" placeholder="">
+
+                <label>리마인더</label>
+                <select class="custom-select" id="post-remind">
+                    <option selected>알림없음</option>
+                    <option value="1">1일 전</option>
+                    <option value="2">2일 전</option>
+                    <option value="3">1주일 전</option>
+                </select>
+
+            </div>
+
+
+            <button type="button" class="btn btn-primary" onclick="register()">등록</button>
+            <!--postTodo()는 schedule DB에 등록-->
+            <button type="button" class="btn btn-primary modal_close" onclick="location.href = '#'">취소</button>
+
         </div>
+        <!--</div>-->
+
     </div>
 
     <div class="row">
@@ -217,39 +338,11 @@
         <div class="col-md-5 left">
             <h1 style="color:#5A86BF; text-align: center;">TO-DO</h1>
             <ul class="todo">
-                <li>
-                    <button class="todobutton urgent" onclick="todoClicked(this.textContent)" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"><span class="date">2021.06.01</span>
-                        - <span class="work">Study JS</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                    </button>
-                </li>
-                <li>
-                    <button class="todobutton" onclick="todoClicked(this.textContent)" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"><span
-                            class="date">2021.06.10</span> - <span class="work">Study Python</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                    </button>
-                </li>
             </ul>
-
         </div>
-
-
         <div class="col-md-5 right">
             <h1 style="color:#5A86BF; text-align: center;">DONE</h1>
             <ul class="done">
-
             </ul>
         </div>
         <div class="col-md-1"></div>
