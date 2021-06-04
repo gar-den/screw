@@ -11,6 +11,8 @@
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="../static/screw.png">
@@ -42,7 +44,7 @@
         }
 
         .login-bottom {
-            padding: 100px 40px 40px 0px;
+            padding: 70px 40px 100px 40px;
             text-align: center;
         }
 
@@ -147,7 +149,7 @@
             background-clip: border-box;
             background-size: 200% auto;
             color: #fff;
-            background-clip: text;
+/*            background-clip: text;*/
             text-fill-color: transparent;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -171,7 +173,7 @@
             <h3>Scheduler for Crew</h3>
             <h6>조원과 함께할 스케줄을 자유롭게 관리해보세요!</h6>
             <br>
-            <h6>사용법 보기 screw바 Click!</h6><div class="arrow-icon"></div>
+            <h6>사용가이드 보기, SCREW바 Click!</h6><div class="arrow-icon"></div>
         </div>
          <div class="login-bottom">
             <a id="kakao-login-btn"></a>
@@ -222,8 +224,6 @@
                 data: {id_give: id},
                 success: function (response) {
                     login_id = id;
-
-                    alert("login 성공");
 
                     window.location.href = "/index"
                 }
