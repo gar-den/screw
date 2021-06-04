@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SCREW</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="../static/screw.png">
+
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&display=swap" rel="stylesheet">
+
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        body {
+            font-family: 'Jua', sans-serif;
+            background-color: white;
+        }
+
+        .wrapper {
+            width: 1000px;
+            height: 600px;
+            position: relative;
+            margin: 5% auto;
+            box-shadow: 2px 18px 70px 0px lightcyan;
+            overflow: hidden;
+        }
+
+        .login-bottom {
+            padding: 100px 40px 40px 0px;
+            text-align: center;
+        }
+
+    .screw-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 30%;
+        border: 2px solid #fff;
+        background-color: white;
+        position: absolute;
+        bottom: 300px;
+        right: 250px;
+        color: #fff;
+        background-image: url(../static/screw.png);
+        background-position: center;
+        background-size: cover;
+    }
+    .arrow-icon {
+        position: absolute;
+        width: 60px;
+        height: 70px;
+        right: 300px;
+        bottom: 200px;
+
+
+        background-image: url(../static/arrow.png);
+        background-position: center;
+        background-size: cover;
+    }
+    .title-text{
+        margin-top: 50px ;
+        text-align: center;
+        line-height: 400%;
+    }
+
+    .login-top {
+        width: 1000px;
+        height: 200px;
+        background: linear-gradient(to right, #B3D5F2, #C3D9B8, #F2BF80, #F26890);
+        /*position: absolute;*/
+        box-sizing: border-box;
+        padding: 6%;
+        transition: all 0.5s ease-in-out;
+        text-align: center;
+    }
+
+    :root {
+            --underline-intrinsic-width: 8;
+            --underline-width: 12;
+            --underline-color: #f1a1e3;
+            --underline-cap-width: 4px;
+            --underline-offset-y: -2px;
+            --underline-padding-x: 0.12em;
+
+            --cap-image-left: url(https://files-d4s40otz1.now.sh/left.svg);
+            --cap-image-right: url(https://files-4vvqilj8v.now.sh/right.svg);
+        }
+
+        .heading {
+            display: inline;
+            --underline-width-scale: calc(var(--underline-width) / var(--underline-intrinsic-width));
+            padding: 0 calc(var(--underline-padding-x) + calc(var(--underline-cap-width) * var(--underline-width-scale)));
+            box-decoration-break: clone;
+            background-repeat: no-repeat;
+            color: #1221ff;
+            background-image: linear-gradient(180deg, var(--underline-color), var(--underline-color)),
+            var(--cap-image-left),
+            var(--cap-image-right);
+            background-position-x: calc(var(--underline-cap-width) * var(--underline-width-scale)),
+            0,
+            100%;
+            background-position-y: calc(100% - var(--underline-offset-y) * -1);
+            background-size: calc(100% - calc(var(--underline-cap-width) * var(--underline-width-scale) * 2)) calc(var(--underline-width) * 1px),
+            auto calc(var(--underline-width) * 1px),
+            auto calc(var(--underline-width) * 1px);
+
+            font-size: 3rem;
+            font-weight: bold;
+            --underline-width: 20;
+            --underline-offset-y: -2px;
+            --cap-image-left: url(https://files-6lc03kjqt.now.sh/left-2.svg);
+            --cap-image-right: url(https://files-e7gkh52mq.now.sh/right-2.svg);
+        }
+
+        @font-face {
+            font-family: "ubuntu";
+            font-style: italic;
+            font-weight: 300;
+            src: local("Lato Light Italic"), local("Lato-LightItalic"),
+            url(https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfqw.woff2) format("woff2");
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 55px;
+            font-weight: 700;
+            background: linear-gradient(to right, #32668f 10%, #e39a2d 50%, #d95b4f 60%);
+            background-size: auto auto;
+            background-clip: border-box;
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 1.5s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes textclip {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+    </style>
+    <div class="wrapper">
+        <div class="login-top">
+            <h1>SCREW</h1>
+        </div>
+        <div class="title-text">
+            <button class="screw-icon" onclick="location.href='https://www.notion.so/SCREW-d7b1d02824e9462880eddfa210d125f8' "><i class="fas fa-chevron-down fa-1x"></i></button>
+            <h3>Scheduler for Crew</h3>
+            <h6>조원과 함께할 스케줄을 자유롭게 관리해보세요!</h6>
+            <br>
+            <h6>사용법 보기 screw바 Click!</h6><div class="arrow-icon"></div>
+        </div>
+         <div class="login-bottom">
+            <a id="kakao-login-btn"></a>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        let login_id = -10;
+
+        function unlinkApp() {
+            Kakao.API.request({
+                url: '/v1/user/unlink',
+                success: function () {
+                    alert('success: ' + JSON.stringify(res))
+                },
+                fail: function (err) {
+                    alert('fail: ' + JSON.stringify(err))
+                },
+            })
+        }
+
+        Kakao.init('144cbb8e4fb3a26d2aa318d04004fe51');
+        console.log(Kakao.isInitialized());
+
+        Kakao.Auth.createLoginButton({
+            container: '#kakao-login-btn',
+            success: function (authObj) {
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function (result) {
+                        id = result.id;
+
+                        login(id)
+                    },
+                })
+            },
+            fail: function (err) {
+                alert('failed to login: ' + JSON.stringify(err))
+            },
+        })
+
+        function login(id) {
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                data: {id_give: id},
+                success: function (response) {
+                    login_id = id;
+
+                    alert("login 성공");
+
+                    window.location.href = "/index"
+                }
+            });
+        }
+    </script>
+</head>
+
+</body>
+</html>

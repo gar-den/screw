@@ -9,25 +9,52 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="../static/screw.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Jua&display=swap" rel="stylesheet">
+
     <style>
         * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        body {
+
+        }
+
+        div, h1, img {
         }
 
         .container-fluid {
-            height: 1000px;
+            padding: 30px;
+            background-color: #5A86BF;
         }
 
         .main {
+            background-color: white;
             margin-top: 10px;
-            border: 3px solid #F28F80;
+            border: 7px solid #F28F80;
             border-radius: 15px;
             padding: 10px;
-            height: 300px;
+            height: 500px;
+        }
+
+        #today_date {
+            width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
         }
 
         .left {
+            background-color: white;
+
             margin-top: 10px;
-            border: 3px solid #C3D9B8;
+            border: 7px solid #C3D9B8;
             border-radius: 15px;
             padding: 10px;
             height: 500px;
@@ -35,8 +62,10 @@
         }
 
         .right {
+            background-color: white;
+
             margin-top: 10px;
-            border: 3px solid #C3D9B8;
+            border: 7px solid #C3D9B8;
             border-radius: 15px;
             padding: 10px;
             height: 500px;
@@ -45,19 +74,29 @@
 
         .modal_wrap {
             display: none;
-            width: 500px;
+            width: 550px;
             height: 600px;
             position: absolute;
             padding: 50px;
-            border: black solid;
-            border-radius: 5px;
+            border: 10px solid #5A86BF;
+            border-radius: 15px;
 
             top: 50%;
             left: 50%;
-            margin: -250px 0 0 -250px;
+            margin: -300px 0 0 -250px;
             background: #eee;
             z-index: 2;
 
+        }
+
+        .groupdiv {
+            text-align: center;
+        }
+
+        .group {
+            width: 100px;
+
+            margin-right: 20px;
         }
 
         .black_bg {
@@ -77,7 +116,7 @@
             text-align: center;
         }
 
-        .submit {
+        .submit .groupbutton {
             border-color: #5A86BF;
             color: #5A86BF;
         }
@@ -87,7 +126,7 @@
             font-weight: bold;
         }
 
-        .todobutton {
+        .todobutton, .trashbutton {
             background: none;
             border: none;
         }
@@ -95,26 +134,140 @@
         ul {
             margin: 20px 0px;
         }
+
+        #invisible_id, #invisible_group, #invisible_finish {
+            display: none;
+        }
+
+        #modalbuttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .modal_title {
+            font-weight: bold;
+        }
+
+        input {
+            margin: 10px 0px;
+        }
+
+        :root {
+            --underline-intrinsic-width: 8;
+            --underline-width: 12;
+            --underline-color: #f1a1e3;
+            --underline-cap-width: 4px;
+            --underline-offset-y: -2px;
+            --underline-padding-x: 0.12em;
+
+            --cap-image-left: url(https://files-d4s40otz1.now.sh/left.svg);
+            --cap-image-right: url(https://files-4vvqilj8v.now.sh/right.svg);
+        }
+
+        .heading {
+            display: inline;
+            --underline-width-scale: calc(var(--underline-width) / var(--underline-intrinsic-width));
+            padding: 0 calc(var(--underline-padding-x) + calc(var(--underline-cap-width) * var(--underline-width-scale)));
+            box-decoration-break: clone;
+            background-repeat: no-repeat;
+            color: #1221ff;
+            background-image: linear-gradient(180deg, var(--underline-color), var(--underline-color)),
+            var(--cap-image-left),
+            var(--cap-image-right);
+            background-position-x: calc(var(--underline-cap-width) * var(--underline-width-scale)),
+            0,
+            100%;
+            background-position-y: calc(100% - var(--underline-offset-y) * -1);
+            background-size: calc(100% - calc(var(--underline-cap-width) * var(--underline-width-scale) * 2)) calc(var(--underline-width) * 1px),
+            auto calc(var(--underline-width) * 1px),
+            auto calc(var(--underline-width) * 1px);
+
+            font-size: 3rem;
+            font-weight: bold;
+            --underline-width: 20;
+            --underline-offset-y: -2px;
+            --cap-image-left: url(https://files-6lc03kjqt.now.sh/left-2.svg);
+            --cap-image-right: url(https://files-e7gkh52mq.now.sh/right-2.svg);
+        }
+
+        @font-face {
+            font-family: "ubuntu";
+            font-style: italic;
+            font-weight: 300;
+            src: local("Lato Light Italic"), local("Lato-LightItalic"),
+            url(https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfqw.woff2) format("woff2");
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 55px;
+            font-weight: 700;
+            background: linear-gradient(to right, #32668f 10%, #e39a2d 50%, #d95b4f 60%);
+            background-size: auto auto;
+            background-clip: border-box;
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 1.5s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes textclip {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+
     </style>
+
+
     <script>
         $(document).ready(function () {
-            showTodo();
+            showTodo(0);
         });
 
-        function showTodo() { // db에서 리스트 가져오기
+        function showTodo(group) { // db에서 리스트 가져오기
+            $('.todo').empty();
+            $('.done').empty();
+
             $.ajax({
                     type: 'GET',
                     url: '/list',
                     data: {},
                     success: function (response) {
                         let saved_content = response['all_saved_content']
+
                         for (let i = 0; i < saved_content.length; i++) {
+                            if (Number(saved_content[i]['group']) !== Number(group)) {
+                                continue;
+                            }
+
                             let title = saved_content[i]['content']
                             let date = saved_content[i]['finish']
                             let new_date; // 계산용
                             let done = saved_content[i]['done'];
+                            let cnt = saved_content[i]['remind'];
+
+                            if (cnt == "0" || cnt == "X") {
+                                cnt = 0;
+                            } else if (cnt == "1") {
+                                cnt = 1;
+                            } else if (cnt == "2") {
+                                cnt = 2;
+                            } else if (cnt == "3") {
+                                cnt = 7;
+                            }
 
                             if (Number(date.split('/')[1]) <= 6) {  // 1~6일이라면 -1, +31일 해서 앞쪽 달으로 보내줌 (계산이 쉽게)
+                                date = date.split('/')[2] + '/' + date.split('/')[0] + '/' + date.split('/')[1];
+
                                 let year = date.split('/')[2];
                                 let month = Number(date.split('/')[0]) - 1;
                                 let day = String(Number(date.split('/')[1]) + 31);
@@ -126,6 +279,7 @@
                                 new_date = year + month + day; // 2021-06-10에서 20210610 으로 변경
                             } else {
                                 new_date = date.split('/')[2] + date.split('/')[0] + date.split('/')[1]; // 2021-06-10에서 20210610 으로 변경
+                                date = date.split('/')[2] + '/' + date.split('/')[0] + '/' + date.split('/')[1];
                             }
 
                             let today = new Date();
@@ -145,11 +299,8 @@
 
                             // todo면 .todo에, done이면 .done에 추가하기
                             let temp_html;
-                            if (done == true) {  // to done
-                                temp_html = `<li>${today_done} ${title}</li>`;
-                                $('.done').append(temp_html)
-                            } else {  // to todo
-                                if (Number(new_date) < Number(today) + 7) { // 일주일도 안남았다면 add urgent to class name
+                            if (done === false && Number(saved_content[i]['group']) === Number(group)) {  // to todo
+                                if (Number(new_date) < Number(today) + cnt) { // 일주일도 안남았다면 add urgent to class name
                                     if (dd > 31) {
                                         dd = dd - 31;
                                         mm = mm + 1;
@@ -177,6 +328,14 @@
                                 }
 
                                 $('.todo').append(temp_html)
+                            } else {  // to done
+                                let donedate = saved_content[i]['tododone'];
+
+                                donedate = donedate.split("/")[2] + "/" + donedate.split("/")[0] + "/" + donedate.split("/")[1]
+
+                                temp_html = `<li>${today_done} ${title}</li>`;
+                                $('.done').append(temp_html)
+
                             }
                         }
                     }
@@ -186,46 +345,70 @@
             )
         }
 
-        function modifySchedule(before, after) {  // to modify_schedule() in app.py
-            $.ajax({
-                type: 'POST',
-                url: '/modify',
-                data: {schedule_receive: before, changed_receive: after},
-                success: function (response) {
-                    alert(response['msg']);
-                }
-            });
+        function deleteSchedule(work) { // to delete_schedule() in app.py
+            let choice = confirm("정말로 삭제하시겠습니까?");
+
+            if (choice == true) {
+                console.log("trueeeeee")
+                deleteToServer(work);
+            }
         }
 
-        function deleteSchedule(work) {// to delete_schedule() in app.py
+        function deleteToServer(work) {
+            console.log("work to delete: ", work);
+
             $.ajax({
                 type: 'POST',
                 url: '/delete',
-                data: {schedule_give: work},
+                data: {content_give: work},
                 success: function (response) {
                     alert(response['msg']);
+
+                    window.location.reload();
                 }
             });
         }
 
         function register() {
-            let title = $('#post-title').val()
+            let db_id = $('#invisible_id').text();
+            let db_group = $('#invisible_group').text();
+            let db_finish = $('#invisible_finish').text();
+
+            let content = $('#post-content').val()
             let comment = $('#post-comment').val()
             let url = $('#post-url').val()
             let remind = $('#post-remind').val()
-            /*시작날짜 끝날짜
-            let start = $('#post-start').val()
-            let finish = $('#post-finish').val()
-            */
-            $.ajax({
-                type: "POST",
-                url: "/save",
-                data: {title_give: title, comment_give: comment, url_give: url, remind_give: remind},
-                success: function (response) {
-                    alert(response["msg"]);
-                    window.location.reload();
-                }
-            })
+            let start = $('#datepicker1').val()
+            let finish = $('#datepicker2').val()
+            let group = $('#group_modal_select').val();
+
+            if (content === "" || start === "" || finish === "" || group == "조 선택") {
+                alert("내용을 입력해주세요.");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/save",
+                    data: {
+                        original_content: db_id,
+                        original_group: db_group,
+                        original_finish: db_finish,
+                        content_give: content,
+                        comment_give: comment,
+                        url_give: url,
+                        remind_give: remind,
+                        start_give: start,
+                        finish_give: finish,
+                        group_give: group,
+                    },
+                    success: function (response) {
+                        alert(response["msg"]);
+
+                        window.location.reload();
+                    }
+                });
+            }
+
+
         }
 
         function todoClicked(text) {
@@ -236,22 +419,64 @@
             let choice = confirm("정말로 완료하셨습니까?");
 
             if (choice == true) {
-                // date 값이랑 work 값 이용해서 db에서 수정/삭제 하기
-                //alert("date: " + date + ", work: " + work + " 완료!")
-                todoDone(work);  // Done 코너로 옮기
+                let group = $('#group_choose_select').val()
 
-                // 요소 삭제 후 리스트 새로고침 필요
+                todoDone(work, date, group);  // Done 코너로 옮기
             } else {
-                // 취소 버튼 눌렀을 때
-                // 모달 창 떠야 함 - 안 된다!
+                let group = $('#group_choose_select').val()
+
+                get_data(work, date, group);
+
+                document.querySelector('.modal_wrap').style.display = 'block';
+                document.querySelector('.black_bg').style.display = 'block';
             }
         }
 
-        function todoDone(work) {
+        function get_data(work, date, group) {
+            $.ajax({
+                type: 'POST',
+                url: '/list_one',
+                data: {content_give: work, date_give: date, group_give: group},
+                success: function (response) {
+                    response = response['saved_content'];
+
+                    let content = response['content'];
+                    let start = response['start'];
+                    let finish = response['finish'];
+                    let comment = response['comment'];
+                    let url = response['url'];
+                    let remind = response['remind'];
+                    let group = response['group'];
+
+                    $('#invisible_id').text(content);
+                    $('#invisible_group').text(group);
+                    $('#invisible_finish').text(finish);
+
+                    // 모달창에 textbox들 response 내용으로 채워놓기
+                    $('#post-content').val(content);
+                    $('#post-comment').val(comment);
+                    $('#post-url').val(url);
+                    $('#post-remind').val(remind);
+                    $('#datepicker1').val(start);
+                    $('#datepicker2').val(finish);
+                    $('#group_modal_select').val(group);
+
+                    // 확인 버튼 눌렀을 때
+                }
+            });
+        }
+
+        function todoDone(work, date, group) {
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+            let donedate = yyyy + '/' + mm + '/' + dd;
+
             $.ajax({
                 type: 'POST',
                 url: '/list',
-                data: {work_give: work},
+                data: {work_give: work, date_give: date, group_give: group, donedate_give: donedate},
                 success: function (response) {
                     alert(response['msg']);  // 완료되었습니다. 라고 출력되기.
 
@@ -261,10 +486,35 @@
         }
 
         window.onload = function () {
+            window.onkeyup = function (e) {
+                var key = e.keyCode ? e.keyCode : e.which;
+
+                if (key == 27) {
+                    $(".modal_wrap").fadeOut(90);
+                    $(".black_bg").fadeOut(90);
+                    $("body").css({overflow: 'scroll'}).unbind('touchmove');
+                } else if (key == 13) {
+                    let ismodalopened = document.querySelector('.modal_wrap').style.display;
+
+                    if (ismodalopened == 'block') {
+                        register();
+                    }
+                }
+            }
 
             function onClick() {
                 document.querySelector('.modal_wrap').style.display = 'block';
                 document.querySelector('.black_bg').style.display = 'block';
+
+                let group = $('#group_choose_select').val();
+
+                $('#post-content').val('');
+                $('#post-comment').val('');
+                $('#post-url').val('');
+                $('#post-remind').val('알림없음');
+                $('#datepicker1').val('');
+                $('#datepicker2').val('');
+                $('#group_modal_select').val(group);
             }
 
             function offClick() {
@@ -272,20 +522,70 @@
                 document.querySelector('.black_bg').style.display = 'none';
             }
 
-
             document.getElementById('modal_btn').addEventListener('click', onClick);
             document.querySelector('.modal_close').addEventListener('click', offClick);
-
-
         };
+
+        $(function () {
+            $("#datepicker1").datepicker();
+            $("#datepicker2").datepicker();
+            $("#today_date").datepicker();
+        });
+
+        function checkclicked() {
+            let checked = document.getElementById('checktoday').checked;
+
+            if (checked == true) {
+                $('#datepicker2').val($('#datepicker1').val());
+                $("#datepicker2").prop("disabled", true);
+            } else {
+                $("#datepicker2").prop("disabled", false);
+            }
+        }
+
+        $(document).ready(function () {
+            $("#datepicker1").change(function () {
+                let checked = document.getElementById('checktoday').checked;
+
+                if (checked == true) {
+                    $('#datepicker2').val($('#datepicker1').val());
+                }
+            });
+        });
     </script>
 </head>
 <body>
 
 <div class="container-fluid">
+
     <div class="main">
-        <h1 style="color:#F26849; text-align: center;">SCREW</h1>
-        <p>This page is for ...</p>
+        <div class="wrapper">
+            <h1 style="color:#F26849; text-align: center;">SCREW <img src="../static/screw.png" style="width: 30px;">
+            </h1>
+        </div>
+        <div class="groupdiv">
+            <select class="form-select group" id="group_choose_select" aria-label="Default select example"
+                    style="display: initial">
+                <option selected>조 선택</option> <!-- option[value=$]{$조}*10 -->
+                <option value="1">1조</option>
+                <option value="2">2조</option>
+                <option value="3">3조</option>
+                <option value="4">4조</option>
+                <option value="5">5조</option>
+                <option value="6">6조</option>
+                <option value="7">7조</option>
+                <option value="8">8조</option>
+                <option value="9">9조</option>
+                <option value="10">10조</option>
+            </select>
+            <button type="button" class="btn btn-outline-primary groupbutton" id="group_choose_button"
+                    onclick="showTodo($('#group_choose_select').val())">선택
+            </button>
+        </div>
+
+        <div id="today_date"></div>
+
+        <br>
 
         <div class="buttondiv">
             <button type="button" class="btn btn-outline-primary submit" id="modal_btn">등록하기</button>
@@ -298,35 +598,72 @@
         <!--<div class="modal_close"><a href="#">close</a></div>-->
         <!--<div id="post-box" >-->
         <div>
-            <h3>등록해보자</h3>
+            <h2 style="text-align: center">[등록] &ensp;
+                <button class="trashbutton" onclick="deleteSchedule($('#post-content').val())">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-trash"
+                         viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd"
+                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                </button>
+
+            </h2>
 
             <div class="form-group">
-                <label for="post-title">제목</label>
-                <input id="post-title" class="form-control" placeholder="">
-                <div class="date-start">시작날짜
+                <label for="post-content" class="modal_title" style="display: inline-block">제목: </label>
+                <input id="post-content" class="form-control" placeholder=""
+                       style="display: inline-block; width: 300px;">
+                <div class="post-date">
+                    <p class="modal_title" style="display: contents;">시작날짜: <input type="text" id="datepicker1"
+                                                                                   style="width: 200px;"></p>
+                    <input type="checkbox" value="" id="checktoday" onclick="checkclicked()"> 당일
+                    <p class="modal_title" id="finishdate"> 끝 날짜: <input type="text" id="datepicker2"
+                                                                         style="width: 200px;"></p>
+                </div>
 
-                </div>
-                <div class="date-finsh">종료날짜
-                </div>
-                <label for="post-comment">세부 내용</label>
+                <label class="modal_title" for="post-comment">세부 내용</label>
                 <textarea id="post-comment" class="form-control" rows="2" placeholder=""></textarea>
-                <label for="post-url">URL 추가</label>
-                <input id="post-url" class="form-control" placeholder="">
+                <label class="modal_title" for="post-url">URL 추가: </label>
+                <input id="post-url" class="form-control" placeholder="" style="display: inline-block; width: 250px;">
+                <br>
+                <label class="modal_title">리마인더: </label>
 
-                <label>리마인더</label>
-                <select class="custom-select" id="post-remind">
+                <select class="form-select" id="post-remind" aria-label="Default select example"
+                        style="display: inline-block; width: 150px; margin-bottom: 10px;">
                     <option selected>알림없음</option>
                     <option value="1">1일 전</option>
                     <option value="2">2일 전</option>
                     <option value="3">1주일 전</option>
                 </select>
-
+                <div class="groupdiv"> <!-- $('#group_modal_select').val() -->
+                    <select class="form-select group" id="group_modal_select" aria-label="Default select example"
+                            style="display: initial">
+                        <!-- $('.group').val() -->
+                        <option selected>조 선택</option> <!-- option[value=$]{$조}*10 -->
+                        <option value="1">1조</option>
+                        <option value="2">2조</option>
+                        <option value="3">3조</option>
+                        <option value="4">4조</option>
+                        <option value="5">5조</option>
+                        <option value="6">6조</option>
+                        <option value="7">7조</option>
+                        <option value="8">8조</option>
+                        <option value="9">9조</option>
+                        <option value="10">10조</option>
+                    </select>
+                </div>
             </div>
 
+            <div id="modalbuttons">
+                <button type="button" class="btn btn-primary" onclick="register()">확인</button>
+                <!--postTodo()는 schedule DB에 등록-->
+                <button type="button" class="btn btn-primary modal_close" onclick="location.href = '#'">취소</button>
+            </div>
 
-            <button type="button" class="btn btn-primary" onclick="register()">등록</button>
-            <!--postTodo()는 schedule DB에 등록-->
-            <button type="button" class="btn btn-primary modal_close" onclick="location.href = '#'">취소</button>
+            <label id="invisible_id"></label>
+            <label id="invisible_group"></label>
+            <label id="invisible_finish"></label>
 
         </div>
         <!--</div>-->
@@ -336,13 +673,21 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-5 left">
-            <h1 style="color:#5A86BF; text-align: center;">TO-DO</h1>
+            <div style="text-align: center;">
+                <p class="heading" style="color:#5A86BF; text-align: center;">TO-DO</p>
+            </div>
+
             <ul class="todo">
+
             </ul>
         </div>
         <div class="col-md-5 right">
-            <h1 style="color:#5A86BF; text-align: center;">DONE</h1>
+            <div style="text-align: center">
+                <p class="heading" style="color:#5A86BF; text-align: center;">DONE</p>
+            </div>
+
             <ul class="done">
+
             </ul>
         </div>
         <div class="col-md-1"></div>
